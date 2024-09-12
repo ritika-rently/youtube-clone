@@ -29,6 +29,24 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <!-- <script>
+      function handleClientLoad() {
+        gapi.load('client', initClient);
+      }
+
+      function initClient() {
+        gapi.client.init({
+          apiKey: "%REACT_APP_API_KEY%",
+          //discoveryDocs: ["%REACT_APP_DISCOVERY_DOCS%"],
+        }).then(() => {
+          console.log('GAPI client initialized');
+        }).catch((error) => {
+          console.error('Error initializing gapi client:', error);
+        });
+      }
+    </script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://apis.google.com/js/api.js" onload="handleClientLoad()"></script> -->
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

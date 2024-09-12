@@ -2,17 +2,6 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -35,4 +24,70 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.header{
+  display: flex;
+  margin: 20px;
+  column-gap: 60px;
+}
+.search{
+  text-align: center;
+  margin-left: 17%;
+}
+.youtube-logo{
+  background: url("youtube.jpg") no-repeat; 
+  width: 155px; 
+  background-size: cover;
+  background-position: center;
+  display: block; 
+  text-indent: -9999px;
+}
+.signInButton, .signOutButton{
+  margin-left: 80% !important;
+  margin-top: -113px !important;
+}
+.message{
+  background-color: #fff;
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 0%), 0 6px 20px 0 rgb(0 0 0 / 14%);
+  width: 500px;
+  padding: 40px;
+  margin-left: 30%;
+  border: #00000014 1px solid;
+  border-radius: 15px;
+  text-align: center;
+}
+.display-video{
+  display: flex;
+  flex-wrap: wrap;
+  margin: 30px;
+  column-gap: 10px;
+}
+.video-content{
+  width: 31%;
+  margin: 20px 0px;
+  text-align: center;
+  border: #00000014 1px solid;
+  padding: 10px;
+}
+.video-content .meta-link{
+  width: 100%;
+  color: #0f0f0f;
+  font-family: "Roboto", "Arial", sans-serif;
+    font-size: 18px;
+    line-height: 2.2rem;
+    font-weight: 500;
+    overflow: hidden;
+    text-decoration: none;
+}
+.video-content .meta img{
+  width: 90%;
+  text-align: center;
+}
+.video-content .metadata{
+  color: #606060;
+  font-family: "Roboto", "Arial", sans-serif;
+  font-size: 15px;
+  line-height: 2rem;
+  font-weight: 400;
 }
