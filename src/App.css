@@ -28,29 +28,35 @@
 
 .header{
   display: flex;
-  margin: 20px;
   column-gap: 60px;
+  background-color: #fff !important;
+  height: 65px;
+  box-shadow: none !important;
+  /* margin-top: 10px; */
 }
 .search{
   text-align: center;
-  margin-left: 17%;
+  margin-right: 28%;
+  margin-top: -15px;
 }
 .youtube-logo{
   background: url("youtube.jpg") no-repeat; 
   width: 155px; 
+  height: 32px;
   background-size: cover;
   background-position: center;
   display: block; 
   text-indent: -9999px;
+  margin-top: -15px;
 }
 .signInButton, .signOutButton{
-  margin-left: 80% !important;
-  margin-top: -113px !important;
+  margin-left: 64% !important;
+  margin-top: -92px !important;
 }
 .message{
   background-color: #fff;
   box-shadow: 0 4px 8px 0 rgb(0 0 0 / 0%), 0 6px 20px 0 rgb(0 0 0 / 14%);
-  width: 500px;
+  width: 600px;
   padding: 40px;
   margin-left: 30%;
   border: #00000014 1px solid;
@@ -60,13 +66,13 @@
 .display-video{
   display: flex;
   flex-wrap: wrap;
-  margin: 30px;
+  /* margin: 30px; */
   column-gap: 10px;
 }
 .video-content{
-  width: 31%;
+  width: 32%;
   margin: 20px 0px;
-  text-align: center;
+  text-align: left;
   border: #00000014 1px solid;
   padding: 10px;
 }
@@ -74,11 +80,11 @@
   width: 100%;
   color: #0f0f0f;
   font-family: "Roboto", "Arial", sans-serif;
-    font-size: 18px;
-    line-height: 2.2rem;
-    font-weight: 500;
-    overflow: hidden;
-    text-decoration: none;
+  font-size: 18px;
+  line-height: 2.2rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-decoration: none;
 }
 .video-content .meta img{
   width: 90%;
@@ -90,4 +96,43 @@
   font-size: 15px;
   line-height: 2rem;
   font-weight: 400;
+  align-items: center;
+  gap: 10px;
+  margin-top: -20px;
+}
+.metadata{
+  display: flex;
+}
+.metadata a{
+  color: #606060;
+  text-decoration: none;
+}
+.video-title {
+  display: -webkit-box;        /* Required for limiting the number of lines */
+  -webkit-line-clamp: 2;       /* Limit to 2 lines */
+  -webkit-box-orient: vertical; /* Set box orientation to vertical */
+  overflow: hidden;            /* Hide any overflowing text */
+  text-overflow: ellipsis;     /* Add ellipsis to indicate overflow */
+}
+
+.css-153gm7s-MuiPaper-root-MuiDrawer-paper{
+  margin-top: 70px;
+}
+.css-9mgopn-MuiDivider-root{
+  display: none;
+}
+.css-153gm7s-MuiPaper-root-MuiDrawer-paper{
+  border-right: 1px solid transparent !important;
+}
+.css-95f9g5-MuiToolbar-root {
+  min-height: 85px !important;
+  padding-bottom: 40px !important;
+}
+.header{
+  background-color: #fff !important;
+  padding: 20px;
+}
+.signInButton, .signOutButton{
+  z-index: 2222;
+  position: fixed !important;
 }

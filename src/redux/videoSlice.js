@@ -12,7 +12,6 @@ export const fetchVideos = createAsyncThunk('videos/fetchVideos', async (_, { ge
           params: {
             part: 'snippet',
             maxResults: 20,
-            q: 'Your query here',
             type: 'video',
             key: API_KEY,
             pageToken: nextPageToken || '', // Fetch the next page of results
@@ -78,6 +77,28 @@ export const fetchVideoDetails = createAsyncThunk('videos/fetchVideoDetails', as
   return response.data.items[0]; // Assuming API returns a single video
 });
 
+// Thunk to fetch search suggestions
+export const fetchSuggestions = createAsyncThunk(
+  'videos/fetchSuggestions',
+  async (query, { rejectWithValue }) => {
+    try {
+      const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
+        params: {
+          part: 'snippet',
+          maxResults: 5,  // Limit the number of suggestions
+          q: query,       // Use the query from the user input
+          key: API_KEY,
+        },
+      });
+      return response.data.items.map((item) => item.snippet.title); // Map to video titles for suggestions
+    } catch (error) {
+      console.error('Failed to fetch suggestions:', error.message);
+      return rejectWithValue('Failed to fetch suggestions.');
+    }
+  }
+);
+
+
 // Thunk to fetch recommended videos
 export const fetchRecommendedVideos = createAsyncThunk(
   'videos/fetchRecommendedVideos',
@@ -122,6 +143,20 @@ export const fetchRecommendedVideos = createAsyncThunk(
   }
 );
 
+// export const fetchSuggestions = async (searchText) => {
+//   try {
+//     const response = await fetch(`https://api.example.com/suggestions?query=${searchText}`);
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`);
+//     }
+//     const data = await response.json();
+//     setSuggestions(data.suggestions);
+//   } catch (error) {
+//     console.error('Failed to fetch suggestions:', error);
+//   }
+// };
+
+
 
 const videoSlice = createSlice({
   name: 'videos',
@@ -129,6 +164,7 @@ const videoSlice = createSlice({
     videos: [],
     videoDetails: {},
     recommendedVideos: [],
+    suggestions: [],  // State to store fetched suggestions
     loading: false,
     error: null, // Error state
     nextPageToken: null, // Initialize nextPageToken in state
@@ -166,6 +202,17 @@ const videoSlice = createSlice({
       })
       .addCase(fetchVideoDetails.fulfilled, (state, action) => {
         state.videoDetails = action.payload;
+      })
+      .addCase(fetchSuggestions.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchSuggestions.fulfilled, (state, action) => {
+        state.loading = false;
+        state.suggestions = action.payload;  // Set fetched suggestions
+      })
+      .addCase(fetchSuggestions.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
       .addCase(fetchRecommendedVideos.fulfilled, (state, action) => {
         const existingVideoIds = new Set(state.recommendedVideos.map(v => v.id.videoId));
