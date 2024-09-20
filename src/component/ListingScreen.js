@@ -19,6 +19,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import ClearIcon from '@mui/icons-material/Clear';
 import Sidebar from './sidebar';  // Import the Sidebar component
 
 const drawerWidth = 240;
@@ -29,13 +30,14 @@ function ListingScreen() {
     const [searchTerm, setSearchTerm] = useState('');
     const [anchorEl, setAnchorEl] = useState(null);  // State for suggestion menu
     const inputRef = useRef(null);  // Reference to the input element
-    const observer = useRef();
+    const observer = useRef(); // Reference to the IntersectionObserver instance for implementing infinite scrolling.
     const dispatch = useDispatch();
-    // const [mobileOpen, setMobileOpen] = useState(false);
+    
 
     const lastVideoElementRef = useCallback((node) => {
-        if (loading) return;
+        if (loading) return; //If loading is true, it means a fetch is already in progress
         if (observer.current) observer.current.disconnect();
+        // Instantiate a new IntersectionObserver
         observer.current = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
                 dispatch(fetchVideos()); // Fetch more videos
@@ -70,6 +72,11 @@ function ListingScreen() {
         handleSearchClick();  // Trigger the search
     };
 
+    const handleClearSearch = () => {
+        setSearchTerm(''); // Clear the search input
+        dispatch(fetchVideos()); // Optionally, fetch initial videos again
+    };
+
     // const handleDrawerTransitionEnd = () => {
     //     setIsClosing(false);
     // };
@@ -101,9 +108,21 @@ function ListingScreen() {
                             value={searchTerm}
                             // onChange={(e) => setSearchTerm(e.target.value)}
                             onChange={handleSearchInputChange}
+                            // inputRef={inputRef}  // Attach the ref here
+                            disabled={!isSignedIn} // Disable input when not signed in
                         />
+                        {searchTerm && ( // Conditionally render the clear button
+                            <IconButton
+                            sx={{ p: '10px' }}
+                            aria-label="clear search"
+                            onClick={handleClearSearch}
+                            disabled={!isSignedIn} // Disable input when not signed in
+                            >
+                            <ClearIcon />
+                            </IconButton>
+                        )}
                         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-                        <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={handleSearchClick}>
+                        <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={handleSearchClick} disabled={!isSignedIn}>
                             <SearchIcon />
                         </IconButton>
                         {/* Suggestions Dropdown */}

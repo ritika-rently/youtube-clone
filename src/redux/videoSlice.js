@@ -17,8 +17,11 @@ export const fetchVideos = createAsyncThunk('videos/fetchVideos', async (_, { ge
             pageToken: nextPageToken || '', // Fetch the next page of results
           },
         });
+
+
+        // Filter the new videos, excluding any that are already in the existing list
         const newVideos = response.data.items.filter(
-            (video) => !videos.some((v) => v.id.videoId === video.id.videoId)
+            (video) => !videos.find((v) => v.id.videoId === video.id.videoId)
           );
           return { videos: newVideos, nextPageToken: response.data.nextPageToken };
 
@@ -61,7 +64,7 @@ export const searchVideos = createAsyncThunk('videos/searchVideos', async (query
       key: API_KEY,
     },
   });
-  console.log('Search response:', response);
+  // console.log('Search response:', response);
   return response.data.items;
 });
 
@@ -114,10 +117,11 @@ export const fetchRecommendedVideos = createAsyncThunk(
       // Make the API request
       const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
         params: {
-          part: 'snippet', // Correct parameter
+          part: 'snippet',
           relatedToVideoId: videoId, // Ensure this is a valid video ID
           type: 'video',   // Must be 'video' to fetch related videos
           key: API_KEY,    // Your valid API key
+          maxResults: 10,
         },
       });
 
@@ -168,8 +172,16 @@ const videoSlice = createSlice({
     loading: false,
     error: null, // Error state
     nextPageToken: null, // Initialize nextPageToken in state
+    recommendedLoading: false,    // New state for recommended videos loading
+    recommendedError: null,  
   },
-  reducers: {},
+  reducers: {
+    clearRecommendedVideos: (state) => {
+      state.recommendedVideos = [];
+      state.recommendedError = null;
+      state.recommendedLoading = false;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchVideos.pending, (state) => {
@@ -214,12 +226,21 @@ const videoSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(fetchRecommendedVideos.pending, (state) => {
+        state.recommendedLoading = true;
+        state.recommendedError = null;
+      })
       .addCase(fetchRecommendedVideos.fulfilled, (state, action) => {
+        state.recommendedLoading = false;
         const existingVideoIds = new Set(state.recommendedVideos.map(v => v.id.videoId));
         const uniqueRecommendedVideos = action.payload.filter(
-          video => !existingVideoIds.has(video.id.videoId)
+          (video) => !existingVideoIds.has(video.id.videoId)
         );
         state.recommendedVideos = [...state.recommendedVideos, ...uniqueRecommendedVideos];
+      })
+      .addCase(fetchRecommendedVideos.rejected, (state, action) => {
+        state.recommendedLoading = false;
+        state.recommendedError = action.payload || 'Failed to fetch recommended videos.';
       });
       // .addCase(fetchRecommendedVideos.fulfilled, (state, action) => {
       //   state.recommendedVideos = [...state.recommendedVideos, ...action.payload]; // Append new recommended videos
@@ -227,5 +248,6 @@ const videoSlice = createSlice({
   },
 });
 
+export const { clearRecommendedVideos } = videoSlice.actions;
 export default videoSlice.reducer;
 
